@@ -10,7 +10,9 @@ function ControlPanel({
   autoRotate,
   stats,
   error,
-  onRegenerate
+  onRegenerate,
+  colors,
+  onColorsChange
 }) {
   const [localParams, setLocalParams] = useState(params)
 
@@ -45,6 +47,10 @@ function ControlPanel({
     setTimeout(() => {
       setLocalParams(params)
     }, 100)
+  }
+
+  const handleColorChange = (colorType, value) => {
+    onColorsChange({ [colorType]: value })
   }
 
   return (
@@ -129,6 +135,55 @@ function ControlPanel({
             onChange={(e) => onAutoRotateChange(e.target.checked)}
           />
           <label htmlFor="autoRotate" className="checkbox-label">Auto Rotate</label>
+        </div>
+      </div>
+
+      {/* Color Customization */}
+      <div className="panel-section">
+        <div className="section-title">🎨 Colors</div>
+
+        <div className="control-group">
+          <label className="control-label">Line Color</label>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <input
+              type="color"
+              value={colors.lineColor}
+              onChange={(e) => handleColorChange('lineColor', e.target.value)}
+              style={{
+                width: '40px',
+                height: '40px',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                background: 'transparent'
+              }}
+            />
+            <span style={{ color: '#4CAF50', fontSize: '12px', fontFamily: 'monospace' }}>
+              {colors.lineColor}
+            </span>
+          </div>
+        </div>
+
+        <div className="control-group">
+          <label className="control-label">Background Color</label>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <input
+              type="color"
+              value={colors.backgroundColor}
+              onChange={(e) => handleColorChange('backgroundColor', e.target.value)}
+              style={{
+                width: '40px',
+                height: '40px',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                background: 'transparent'
+              }}
+            />
+            <span style={{ color: '#4CAF50', fontSize: '12px', fontFamily: 'monospace' }}>
+              {colors.backgroundColor}
+            </span>
+          </div>
         </div>
       </div>
 

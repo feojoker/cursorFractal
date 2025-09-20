@@ -6,6 +6,34 @@ import ControlPanel from './components/ControlPanel'
 import LoadingOverlay from './components/LoadingOverlay'
 import './App.css'
 
+// Transition Loading Component
+function TransitionLoader({ backgroundColor }) {
+  return (
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100%',
+      background: `linear-gradient(135deg, ${backgroundColor}, #2d2d30)`,
+      color: '#4CAF50',
+      fontSize: '18px',
+      fontWeight: '600'
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <div style={{
+          width: '24px',
+          height: '24px',
+          border: '3px solid rgba(76, 175, 80, 0.3)',
+          borderRadius: '50%',
+          borderTopColor: '#4CAF50',
+          animation: 'spin 0.8s ease-in-out infinite'
+        }} />
+        Adjusting view...
+      </div>
+    </div>
+  )
+}
+
 // Error Boundary Component
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -51,6 +79,12 @@ function App() {
   const [renderMode, setRenderMode] = useState('wireframe')
   const [autoRotate, setAutoRotate] = useState(false)
   const [stats, setStats] = useState({ triangles: 0, vertices: 0, fps: 0 })
+  const [toolbarVisible, setToolbarVisible] = useState(true)
+  const [isTransitioning, setIsTransitioning] = useState(false)
+  const [colors, setColors] = useState({
+    lineColor: '#4CAF50',
+    backgroundColor: '#1e1e1e'
+  })
 
   // Generate fractal data
   const generateFractal = async (params = fractalParams) => {
@@ -130,51 +164,86 @@ function App() {
     updateParams(newParams)
   }
 
+  // Handle color changes
+  const updateColors = (newColors) => {
+    setColors(prev => ({ ...prev, ...newColors }))
+  }
+
+  // Toggle toolbar visibility
+  const toggleToolbar = () => {
+    setIsTransitioning(true)
+    setToolbarVisible(!toolbarVisible)
+
+    // Wait for CSS transition to complete (0.4s) before showing the scene
+    setTimeout(() => {
+      setIsTransitioning(false)
+    }, 450) // Slightly longer than CSS transition to ensure it's complete
+  }
+
   // Generate initial fractal
   useEffect(() => {
     generateFractal()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="app">
-      <ErrorBoundary>
-        <ControlPanel
-          params={fractalParams}
-          onParamsChange={updateParams}
-          onPresetApply={applyPreset}
-          onRenderModeChange={setRenderMode}
-          onAutoRotateChange={setAutoRotate}
-          renderMode={renderMode}
-          autoRotate={autoRotate}
-          stats={stats}
-          error={error}
-          onRegenerate={() => generateFractal()}
-        />
-      </ErrorBoundary>
+      {/* Toggle Button */}
+      <button
+        className={`toolbar-toggle ${toolbarVisible ? 'visible' : 'hidden'}`}
+        onClick={toggleToolbar}
+        title={toolbarVisible ? 'Hide Toolbar' : 'Show Toolbar'}
+      >
+        {toolbarVisible ? '◀' : '▶'}
+      </button>
 
-      <div className="canvas-container">
-        <Canvas
-          camera={{ position: [3, 3, 3], fov: 75 }}
-          style={{ background: 'linear-gradient(135deg, #1e1e1e, #2d2d30)' }}
-        >
-          <ambientLight intensity={0.6} />
-          <directionalLight position={[10, 10, 5]} intensity={0.8} />
-
-          <FractalMesh
-            data={fractalData}
-            wireframe={renderMode === 'wireframe'}
-          />
-
-          <OrbitControls
-            enablePan={true}
-            enableZoom={true}
-            enableRotate={true}
+      {/* Control Panel */}
+      <div className={`control-panel-wrapper ${toolbarVisible ? 'visible' : 'hidden'}`}>
+        <ErrorBoundary>
+          <ControlPanel
+            params={fractalParams}
+            onParamsChange={updateParams}
+            onPresetApply={applyPreset}
+            onRenderModeChange={setRenderMode}
+            onAutoRotateChange={setAutoRotate}
+            renderMode={renderMode}
             autoRotate={autoRotate}
-            autoRotateSpeed={2}
+            stats={stats}
+            error={error}
+            onRegenerate={() => generateFractal()}
+            colors={colors}
+            onColorsChange={updateColors}
           />
+        </ErrorBoundary>
+      </div>
 
-          <Stats />
-        </Canvas>
+      <div className={`canvas-container ${!toolbarVisible ? 'full-width' : ''}`}>
+        {isTransitioning ? (
+          <TransitionLoader backgroundColor={colors.backgroundColor} />
+        ) : (
+          <Canvas
+            camera={{ position: [3, 3, 3], fov: 75 }}
+            style={{ background: `linear-gradient(135deg, ${colors.backgroundColor}, #2d2d30)` }}
+          >
+            <ambientLight intensity={0.6} />
+            <directionalLight position={[10, 10, 5]} intensity={0.8} />
+
+            <FractalMesh
+              data={fractalData}
+              wireframe={renderMode === 'wireframe'}
+              lineColor={colors.lineColor}
+            />
+
+            <OrbitControls
+              enablePan={true}
+              enableZoom={true}
+              enableRotate={true}
+              autoRotate={autoRotate}
+              autoRotateSpeed={2}
+            />
+
+            <Stats />
+          </Canvas>
+        )}
 
         {loading && <LoadingOverlay />}
       </div>

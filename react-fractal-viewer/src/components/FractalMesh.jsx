@@ -2,7 +2,7 @@ import { useRef, useEffect, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
-function FractalMesh({ data, wireframe = true }) {
+function FractalMesh({ data, wireframe = true, lineColor = '#4CAF50' }) {
   const meshRef = useRef()
 
   // Create geometry from fractal data
@@ -43,20 +43,21 @@ function FractalMesh({ data, wireframe = true }) {
   // Create material
   const material = useMemo(() => {
     return new THREE.MeshLambertMaterial({
-      color: new THREE.Color('#4CAF50'),
+      color: new THREE.Color(lineColor),
       wireframe: wireframe,
       transparent: false,
       opacity: 1.0,
       side: THREE.DoubleSide
     })
-  }, [wireframe])
+  }, [wireframe, lineColor])
 
-  // Update material when wireframe changes
+  // Update material when wireframe or color changes
   useEffect(() => {
     if (meshRef.current) {
       meshRef.current.material.wireframe = wireframe
+      meshRef.current.material.color.set(lineColor)
     }
-  }, [wireframe])
+  }, [wireframe, lineColor])
 
   // Auto-rotation animation (optional)
   useFrame((state) => {
