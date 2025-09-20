@@ -56,3 +56,6 @@ dkms.conf
 *.dwo
 
 .DS_Store
+
+# Generated fractal data
+fractal_data.json

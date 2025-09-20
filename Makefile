@@ -21,6 +21,7 @@ SRC = 	main.c \
         gl_calculations.c \
         gl_mouse_controls.c \
         gl_regeneration.c \
+        export_json.c \
         \
         obj.c \
         \

@@ -48,6 +48,7 @@ float sample_4D_Julia_optimized(t_julia *julia, float3 pos);
 float3 **polygonise(float3 *v_pos, float *v_val, uint2 *pos, t_data *data);
 
 void export_obj(t_data *data);
+void export_fractal_json(t_data *data, const char *filename);
 void write_mesh(t_data *data, int surface, obj *o);
 
 #endif
