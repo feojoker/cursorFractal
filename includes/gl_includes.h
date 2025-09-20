@@ -3,10 +3,12 @@
 
 # define SHADER_SRC_SIZE 10000
 
-# define VERTEX_SRC "./shaders/vertex_old.shader"
-# define FRAGMENT_SRC "./shaders/fragment_old.shader"
+# define VERTEX_SRC "./shaders/vertex.shader"
+# define FRAGMENT_SRC "./shaders/fragment.shader"
 
 # define GLEW_STATIC
+# define GL_SILENCE_DEPRECATION
+# include <GL/glew.h>
 # include <GLFW/glfw3.h>
 # include "stb_image.h"
 # include <cglm/cglm.h>
