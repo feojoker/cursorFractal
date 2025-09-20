@@ -25,7 +25,7 @@ typedef struct s_matrix {
 typedef struct s_gl {
   GLFWwindow *window;
 
-  int export;
+  int export_obj;
 
   GLuint vertexShader;
   GLuint fragmentShader;
@@ -38,6 +38,16 @@ typedef struct s_gl {
   uint num_pts;
   uint num_tris;
   t_matrix *matrix;
+
+  // Back-reference to data for GUI integration
+  struct s_data *data;
+
+  // Rendering state
+  int wireframe_mode;
+  float background_color[3];
+  float line_color[3];
+  int auto_rotate;
+  float rotation_speed;
 } t_gl;
 
 typedef struct s_julia {
@@ -79,4 +89,7 @@ typedef struct s_data {
   float3 **triangles;
 
   uint2 len;
+
+  // GUI and regeneration support
+  int needs_regeneration;
 } t_data;

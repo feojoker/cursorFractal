@@ -64,8 +64,12 @@ int main(int argv, char **argc) {
   clean_calcs(data);
 #endif
 
+  // Set up back-reference for GUI integration
+  data->gl->data = data;
+  data->needs_regeneration = 0;
+
   run_graphics(data->gl, data->fract->p1, data->fract->p0);
-  if (data->gl->export) {
+  if (data->gl->export_obj) {
     printf("\nEXPORTING----\n");
     export_obj(data);
     printf("DONE\n");

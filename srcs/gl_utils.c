@@ -14,7 +14,7 @@ void processInput(GLFWwindow *window, t_gl *gl) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, GL_TRUE);
   if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-    gl->export = 1;
+    gl->export_obj = 1;
     glfwSetWindowShouldClose(window, GL_TRUE);
   }
   if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS && !h_pressed) {

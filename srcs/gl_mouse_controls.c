@@ -12,6 +12,9 @@ static float camera_sensitivity = 0.005f;
 static float zoom_sensitivity = 0.1f;
 static float pan_sensitivity = 0.01f;
 
+// Auto-rotation state
+static float auto_rotation_time = 0.0f;
+
 // Mouse button callback
 void mouse_button_callback(GLFWwindow *window, int button, int action,
                            int mods) {
@@ -130,6 +133,36 @@ void apply_interactive_transforms(t_gl *gl) {
   glm_rotate(matrix->model_mat, matrix->rotation_y, y_axis);
 
   // Apply translation (panning)
+  vec3 translation = {matrix->pan_x, matrix->pan_y, 0.0f};
+  glm_translate(matrix->model_mat, translation);
+
+  // Update the shader uniform
+  glUniformMatrix4fv(matrix->model, 1, GL_FALSE, (float *)matrix->model_mat);
+}
+
+// Auto-rotation function
+void apply_auto_rotation(t_gl *gl) {
+  if (!gl || !gl->matrix)
+    return;
+
+  t_matrix *matrix = gl->matrix;
+
+  // Update rotation time
+  auto_rotation_time += 0.016f * gl->rotation_speed; // Assume ~60 FPS
+
+  // Apply automatic rotation
+  glm_mat4_identity(matrix->model_mat);
+
+  // Apply zoom first
+  glm_scale_uni(matrix->model_mat, matrix->zoom);
+
+  // Apply automatic rotation around both axes
+  vec3 x_axis = {1.0f, 0.0f, 0.0f};
+  vec3 y_axis = {0.0f, 1.0f, 0.0f};
+  glm_rotate(matrix->model_mat, auto_rotation_time * 0.5f, x_axis);
+  glm_rotate(matrix->model_mat, auto_rotation_time, y_axis);
+
+  // Apply translation (panning) - user can still pan during auto-rotation
   vec3 translation = {matrix->pan_x, matrix->pan_y, 0.0f};
   glm_translate(matrix->model_mat, translation);
 

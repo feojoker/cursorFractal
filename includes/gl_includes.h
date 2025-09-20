@@ -47,9 +47,29 @@ void gl_scale_tris(t_gl *gl, float3 max, float3 min);
 // Mouse control functions
 void init_mouse_controls(t_gl *gl);
 void apply_interactive_transforms(t_gl *gl);
+void apply_auto_rotation(t_gl *gl);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 void mouse_button_callback(GLFWwindow *window, int button, int action,
                            int mods);
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
+
+// GUI functions (C interface)
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void gui_init_c(GLFWwindow *window);
+void gui_shutdown_c();
+void gui_new_frame_c();
+void gui_render_c();
+void gui_render_all_c(t_data *data);
+
+#ifdef __cplusplus
+}
+#endif
+
+// Regeneration functions
+void regenerate_fractal(t_data *data);
+void regenerate_fractal_fast(t_data *data);
 
 #endif

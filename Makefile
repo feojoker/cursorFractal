@@ -20,6 +20,7 @@ SRC = 	main.c \
         gl_init.c \
         gl_calculations.c \
         gl_mouse_controls.c \
+        gl_regeneration.c \
         \
         obj.c \
         \
@@ -36,7 +37,12 @@ SRC_OPTIMIZED = utils_optimized.c \
                 build_fractal_optimized.c \
                 point_cloud_optimized.c
 
+# GUI sources (C++)
+SRC_GUI = gui.cpp
+
 SRCS = $(addprefix $(SRC_DIR), $(SRC))
+SRCS_GUI = $(addprefix $(SRC_DIR), $(SRC_GUI))
+OBJS_GUI = $(addprefix $(OBJ_DIR), $(SRC_GUI:.cpp=.o))
 OBJS = $(addprefix $(OBJ_DIR), $(OBJ))
 OBJ_DIR = ./obj/
 OBJ = $(SRC:.c=.o)
@@ -57,12 +63,24 @@ LIB_INC = libft.h get_next_line.h
 LIB_INC_DIR = ./libft/
 LIB_INCS = $(addprefix $(LIB_INC_DIR), $(LIB_INC))
 
-FLAGS = -O3 -Wall -I$(INC_DIR) -I$(LIB_INC_DIR) -I/opt/homebrew/include
-FLAGS_OPTIMIZED = -O3 -march=native -Wall -I$(INC_DIR) -I$(LIB_INC_DIR) -I/opt/homebrew/include -DOPTIMIZED
-FLAGS_PARALLEL = -O3 -march=native -Wall -I$(INC_DIR) -I$(LIB_INC_DIR) -I/opt/homebrew/include -DOPTIMIZED -DPARALLEL -fopenmp
+FLAGS = -O3 -Wall -I$(INC_DIR) -I$(LIB_INC_DIR) -I/opt/homebrew/include -I./imgui -I./imgui/backends
+FLAGS_OPTIMIZED = -O3 -march=native -Wall -I$(INC_DIR) -I$(LIB_INC_DIR) -I/opt/homebrew/include -I./imgui -I./imgui/backends -DOPTIMIZED
+FLAGS_PARALLEL = -O3 -march=native -Wall -I$(INC_DIR) -I$(LIB_INC_DIR) -I/opt/homebrew/include -I./imgui -I./imgui/backends -DOPTIMIZED -DPARALLEL -fopenmp
 
 GL_LIBS = -framework OpenGL -lGLEW -lglfw -L/opt/homebrew/lib
 OPENSSL_LIB = -lssl -lcrypto -L/opt/homebrew/lib -I/opt/homebrew/include
+
+# ImGui sources
+IMGUI_DIR = ./imgui/
+IMGUI_SOURCES = $(IMGUI_DIR)imgui.cpp \
+                $(IMGUI_DIR)imgui_demo.cpp \
+                $(IMGUI_DIR)imgui_draw.cpp \
+                $(IMGUI_DIR)imgui_tables.cpp \
+                $(IMGUI_DIR)imgui_widgets.cpp \
+                $(IMGUI_DIR)backends/imgui_impl_glfw.cpp \
+                $(IMGUI_DIR)backends/imgui_impl_opengl3.cpp
+
+IMGUI_OBJECTS = $(IMGUI_SOURCES:.cpp=.o)
 
 # Source and object files for optimized version
 SRCS_OPTIMIZED = $(addprefix $(SRC_DIR), $(SRC_OPTIMIZED))
@@ -70,12 +88,12 @@ OBJS_OPTIMIZED = $(addprefix $(OBJ_DIR), $(SRC_OPTIMIZED:.c=.o))
 
 all: $(NAME)
 
-$(NAME): $(OBJ_DIR) $(OBJS)
-		clang $(OBJS) ./libft/libft.a -o $(NAME) $(GL_LIBS) $(OPENSSL_LIB)
+$(NAME): $(OBJ_DIR) $(OBJS) $(OBJS_GUI) $(IMGUI_OBJECTS)
+		clang++ $(OBJS) $(OBJS_GUI) $(IMGUI_OBJECTS) ./libft/libft.a -o $(NAME) $(GL_LIBS) $(OPENSSL_LIB)
 
 # Optimized version
-$(NAME)_optimized: $(OBJ_DIR) $(OBJS) $(OBJS_OPTIMIZED) $(OBJ_DIR)main_optimized.o
-		clang $(filter-out $(OBJ_DIR)main.o,$(OBJS)) $(OBJ_DIR)main_optimized.o $(OBJS_OPTIMIZED) ./libft/libft.a -o $(NAME)_optimized $(GL_LIBS) $(OPENSSL_LIB)
+$(NAME)_optimized: $(OBJ_DIR) $(OBJS) $(OBJS_OPTIMIZED) $(OBJ_DIR)main_optimized.o $(OBJS_GUI) $(IMGUI_OBJECTS)
+		clang++ $(filter-out $(OBJ_DIR)main.o,$(OBJS)) $(OBJ_DIR)main_optimized.o $(OBJS_OPTIMIZED) $(OBJS_GUI) $(IMGUI_OBJECTS) ./libft/libft.a -o $(NAME)_optimized $(GL_LIBS) $(OPENSSL_LIB)
 
 # Parallel version (requires OpenMP)
 $(NAME)_parallel: $(OBJ_DIR) $(OBJS) $(OBJS_OPTIMIZED) $(OBJ_DIR)main_optimized.o
@@ -100,6 +118,14 @@ $(OBJ_DIR)build_fractal_optimized.o: $(SRC_DIR)build_fractal_optimized.c $(INCS)
 
 $(OBJ_DIR)point_cloud_optimized.o: $(SRC_DIR)point_cloud_optimized.c $(INCS)
 		clang $(FLAGS_OPTIMIZED) -o $@ -c $<
+
+# ImGui compilation rules
+%.o: %.cpp
+		clang++ $(FLAGS) -o $@ -c $<
+
+# GUI compilation rules
+$(OBJ_DIR)%.o: $(SRC_DIR)%.cpp $(INCS)
+		clang++ $(FLAGS) -o $@ -c $<
 
 clean:
 		@rm -f $(OBJS)
