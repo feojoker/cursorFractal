@@ -18,7 +18,8 @@ SRC = 	main.c \
         gl_build.c \
         gl_points.c \
         gl_init.c \
-        gl_calculations.c\
+        gl_calculations.c \
+        gl_mouse_controls.c \
         \
         obj.c \
         \

@@ -84,8 +84,21 @@ Then enter number of iterations when prompted.
 ## What you'll see
 
 1. **Progress numbers** (1/60, 2/60, etc.) - the program is calculating the fractal
-2. **OpenGL window** - shows the rotating 3D fractal
-3. **fractal.obj file** - exported 3D model when you close the window
+2. **OpenGL window** - shows the interactive 3D fractal with mouse controls
+3. **fractal.obj file** - exported 3D model when you press 'S' or close the window
+
+## 🖱️ Interactive Controls
+
+**Mouse/Trackpad:**
+- **Left click + drag**: Rotate the fractal model
+- **Right click + drag**: Pan (move) the model
+- **Scroll wheel**: Zoom in/out
+
+**Keyboard:**
+- **ESC**: Exit the program
+- **S**: Save model as .obj file and exit
+- **H**: Show help with all controls
+- **R**: Reset view to default position
 
 ## Parameters explained
 
@@ -125,10 +138,11 @@ echo "4" | time ./morphosis_optimized 0.15 -0.2 0.8 0.0 0.0
 ## What makes this special
 
 - **4D mathematics**: Uses quaternions (4D complex numbers)
+- **Interactive visualization**: Full mouse/trackpad control for exploration
 - **Real-time rendering**: Smooth OpenGL animations
 - **Marching cubes**: Converts mathematical functions to 3D meshes
 - **Export capability**: Saves results as standard 3D model files
-- **🚀 Performance optimization**: 42.76x faster execution with same quality
+- **🚀 Performance optimization**: 4.45x faster execution with same quality
 
 ## Files created
 

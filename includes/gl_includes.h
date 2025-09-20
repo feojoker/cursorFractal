@@ -44,4 +44,12 @@ void gl_retrieve_tris(t_data *data);
 void gl_calc_transforms(t_gl *gl);
 void gl_scale_tris(t_gl *gl, float3 max, float3 min);
 
+// Mouse control functions
+void init_mouse_controls(t_gl *gl);
+void apply_interactive_transforms(t_gl *gl);
+void mouse_callback(GLFWwindow *window, double xpos, double ypos);
+void mouse_button_callback(GLFWwindow *window, int button, int action,
+                           int mods);
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
+
 #endif

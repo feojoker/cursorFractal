@@ -19,15 +19,21 @@ A Julia set is a special type of fractal that comes from mathematics. It's like 
 ### What does this program do?
 This program:
 1. **Creates beautiful 3D shapes** from 4D mathematical formulas
-2. **Shows them on your screen** with rotating animations
-3. **Saves them as 3D model files** that you can use in other programs
+2. **Shows them on your screen** with interactive controls
+3. **Lets you explore** the fractal with your mouse or trackpad
+4. **Saves them as 3D model files** that you can use in other programs
 
 ### 🚀 Performance Features
 This project includes **optimized versions** that are incredibly fast:
-- **42.76x faster** than the original version
-- **4,176% performance improvement**
+- **4.45x faster** than the original version
+- **345% performance improvement**
 - **Same beautiful results** in a fraction of the time
-- **Perfect for real-time visualization** and large fractal generation
+- **Perfect for real-time interaction** and exploration
+
+### 🖱️ Interactive Features
+- **Mouse control**: Rotate, zoom, and pan the 3D fractal
+- **Real-time exploration**: Discover different angles and details
+- **Smooth interaction**: Responsive controls for natural exploration
 
 ## 🎯 Is this for me?
 
@@ -185,6 +191,12 @@ Actually running our fractal generator!
 3/60
 ...
 60/60
+Mouse controls initialized:
+  Left click + drag: Rotate model
+  Right click + drag: Pan model
+  Scroll wheel: Zoom in/out
+  ESC: Exit
+  S: Save model and exit
 ```
 
 **What's happening:**
@@ -192,7 +204,18 @@ The computer is:
 1. Creating a 3D grid of points
 2. For each point, calculating if it's part of the fractal
 3. Converting the results into a 3D shape
-4. This takes time because there are many calculations!
+4. Setting up interactive mouse controls
+5. This takes time because there are many calculations!
+
+**🖱️ Interactive Controls:**
+Once the window opens, you can:
+- **Left click + drag**: Rotate the fractal to see all angles
+- **Right click + drag**: Move the fractal around
+- **Scroll wheel**: Zoom in and out to see details
+- **Press H**: Show help with all controls
+- **Press R**: Reset to the original view
+- **Press S**: Save the fractal as a 3D model file
+- **Press ESC**: Exit the program
 
 ### Step 7: Understanding the output
 
