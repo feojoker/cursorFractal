@@ -1,0 +1,11 @@
+timestamp,grid_size,step_size,iterations,original_time,optimized_time,speedup,improvement_percent
+2025-09-20 14:24:06,20,0.15,4,[0;34mTesting Original...[0m
+[0;32m✓ Original: 5.005067000s[0m
+5.005067000,[0;34mTesting Optimized...[0m
+[0;32m✓ Optimized: .117044000s[0m
+.117044000,1.0,0
+2025-09-20 14:35:30,20,0.15,4,[0;34mTesting Original...[0m
+[0;32m✓ Original: 9.596664000s[0m
+9.596664000,[0;34mTesting Optimized...[0m
+[0;32m✓ Optimized: 2.154236000s[0m
+2.154236000,1.0,0
