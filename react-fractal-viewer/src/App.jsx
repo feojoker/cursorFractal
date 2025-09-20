@@ -137,6 +137,21 @@ function App() {
 
   return (
     <div className="app">
+      <ErrorBoundary>
+        <ControlPanel
+          params={fractalParams}
+          onParamsChange={updateParams}
+          onPresetApply={applyPreset}
+          onRenderModeChange={setRenderMode}
+          onAutoRotateChange={setAutoRotate}
+          renderMode={renderMode}
+          autoRotate={autoRotate}
+          stats={stats}
+          error={error}
+          onRegenerate={() => generateFractal()}
+        />
+      </ErrorBoundary>
+
       <div className="canvas-container">
         <Canvas
           camera={{ position: [3, 3, 3], fov: 75 }}
@@ -163,21 +178,6 @@ function App() {
 
         {loading && <LoadingOverlay />}
       </div>
-
-      <ErrorBoundary>
-        <ControlPanel
-          params={fractalParams}
-          onParamsChange={updateParams}
-          onPresetApply={applyPreset}
-          onRenderModeChange={setRenderMode}
-          onAutoRotateChange={setAutoRotate}
-          renderMode={renderMode}
-          autoRotate={autoRotate}
-          stats={stats}
-          error={error}
-          onRegenerate={() => generateFractal()}
-        />
-      </ErrorBoundary>
     </div>
   )
 }
