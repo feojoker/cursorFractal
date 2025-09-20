@@ -184,7 +184,7 @@ chmod +x start_web_app.sh
 ```
 
 **Port already in use:**
-The script automatically handles port conflicts (3005, 5173).
+The script automatically handles port conflicts (3005, 3000).
 
 **Dependencies missing:**
 ```bash
@@ -222,7 +222,7 @@ The web app automatically falls back to JavaScript generation.
 - `fractal_data.json` - fractal data for the web interface
 - `react-fractal-viewer/` - web application directory
   - Backend server (port 3005)
-  - Frontend interface (port 5173)
+  - Frontend interface (port 3000)
 
 ---
 

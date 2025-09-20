@@ -153,7 +153,7 @@ The unified script has several options for different use cases:
 
 3. **Check if ports are free:**
    - Backend uses port 3005
-   - Frontend uses port 5173
+   - Frontend uses port 3000
    - The script will try to free these ports automatically
 
 4. **Check Node.js installation:**
