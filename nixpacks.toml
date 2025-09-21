@@ -1,0 +1,15 @@
+[phases.setup]
+nixPkgs = ["nodejs"]
+
+[phases.install]
+cmds = [
+  "cd react-fractal-viewer && npm install"
+]
+
+[phases.build]
+cmds = [
+  "cd react-fractal-viewer && npm run build"
+]
+
+[start]
+cmd = "cd react-fractal-viewer && npm run server"
