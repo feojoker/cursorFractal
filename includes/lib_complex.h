@@ -4,7 +4,51 @@
 #ifdef __APPLE__
 #include <OpenCL/opencl.h>
 #else
+// Linux: Include OpenCL but define missing vector types
 #include <CL/opencl.h>
+
+// Define OpenCL vector types for C compilation
+typedef struct {
+  float x, y;
+} float2;
+typedef struct {
+  float x, y, z;
+} float3;
+typedef struct {
+  float x, y, z, w;
+} float4;
+typedef struct {
+  unsigned int x, y;
+} uint2;
+
+// Helper functions for vector operations
+static inline float3 float3_subtract(float3 a, float3 b) {
+  float3 result = {a.x - b.x, a.y - b.y, a.z - b.z};
+  return result;
+}
+
+static inline float3 float3_add(float3 a, float3 b) {
+  float3 result = {a.x + b.x, a.y + b.y, a.z + b.z};
+  return result;
+}
+
+static inline float3 float3_multiply(float3 a, float scalar) {
+  float3 result = {a.x * scalar, a.y * scalar, a.z * scalar};
+  return result;
+}
+
+static inline float3 float3_scale_add(float3 p0, float scalar, float3 diff) {
+  float3 result = {p0.x + scalar * diff.x, p0.y + scalar * diff.y,
+                   p0.z + scalar * diff.z};
+  return result;
+}
+
+// Macro to handle vector operations for Linux compatibility
+#define VECTOR_OP_ADD(a, b) float3_add(a, b)
+#define VECTOR_OP_SUB(a, b) float3_subtract(a, b)
+#define VECTOR_OP_MUL(a, s) float3_multiply(a, s)
+#define VECTOR_OP_SCALE_ADD(p0, s, diff) float3_scale_add(p0, s, diff)
+
 #endif
 #include "math.h"
 
