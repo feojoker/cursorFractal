@@ -1,5 +1,7 @@
 #include <morphosis.h>
 #include <libft.h>
+#include <fcntl.h>    // for open() and O_RDONLY
+#include <unistd.h>   // for read() and close()
 
 void							free_matrix1(int ***m)
 {

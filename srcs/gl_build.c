@@ -1,4 +1,6 @@
 #include "morphosis.h"
+#include <fcntl.h>    // for open() and O_RDONLY
+#include <unistd.h>   // for read() and close()
 
 void 						makeShaderProgram(t_gl *gl)
 {
