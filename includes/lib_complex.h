@@ -4,20 +4,7 @@
 #ifdef __APPLE__
 #include <OpenCL/opencl.h>
 #else
-// Linux OpenCL types (struct definitions for compatibility)
-typedef struct {
-  float x, y;
-} float2;
-typedef struct {
-  float x, y, z;
-} float3;
-typedef struct {
-  float x, y, z, w;
-} float4;
-typedef unsigned int uint;
-typedef struct {
-  uint x, y;
-} uint2;
+#include <CL/opencl.h>
 #endif
 #include "math.h"
 
