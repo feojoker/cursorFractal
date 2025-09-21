@@ -4,12 +4,20 @@
 #ifdef __APPLE__
 #include <OpenCL/opencl.h>
 #else
-// Linux OpenCL types (minimal definitions for compilation)
-typedef float float2 __attribute__((ext_vector_type(2)));
-typedef float float3 __attribute__((ext_vector_type(3)));
-typedef float float4 __attribute__((ext_vector_type(4)));
+// Linux OpenCL types (struct definitions for compatibility)
+typedef struct {
+  float x, y;
+} float2;
+typedef struct {
+  float x, y, z;
+} float3;
+typedef struct {
+  float x, y, z, w;
+} float4;
 typedef unsigned int uint;
-typedef unsigned int uint2 __attribute__((ext_vector_type(2)));
+typedef struct {
+  uint x, y;
+} uint2;
 #endif
 #include "math.h"
 
