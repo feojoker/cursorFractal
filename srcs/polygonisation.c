@@ -35,12 +35,7 @@ static float3 interpolate(float3 p0, float3 p1, float v0, float v1) {
   if ((v1 - v0) == 0.0f)
     return p0;
   mu = (1.0f - v0) / (v1 - v0);
-#ifdef __APPLE__
   p = p0 + mu * (p1 - p0);
-#else
-  float3 diff = {p1.x - p0.x, p1.y - p0.y, p1.z - p0.z};
-  p = (float3){p0.x + mu * diff.x, p0.y + mu * diff.y, p0.z + mu * diff.z};
-#endif
   return p;
 }
 

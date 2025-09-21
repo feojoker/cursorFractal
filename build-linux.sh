@@ -11,7 +11,8 @@ mkdir -p obj
 # Compiler settings
 CC=${CC:-gcc}
 CXX=${CXX:-g++}
-FLAGS="-O3 -Wall -I./includes -I./libft -I./imgui -I./imgui/backends"
+# Add OpenCL vector extension support and define OpenCL target version
+FLAGS="-O3 -Wall -I./includes -I./libft -I./imgui -I./imgui/backends -DCL_TARGET_OPENCL_VERSION=120 -DOPENCL_C_VERSION=120"
 GL_LIBS="-lGL -lGLEW -lglfw -lm"
 OPENSSL_LIB="-lssl -lcrypto"
 
