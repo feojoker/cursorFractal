@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Stats } from '@react-three/drei'
 import FractalMesh from './components/FractalMesh'
@@ -86,8 +86,35 @@ function App() {
     backgroundColor: '#1e1e1e'
   })
 
-  // Generate fractal data
+  // Request cancellation and debouncing
+  const abortControllerRef = useRef(null)
+  const debounceTimeoutRef = useRef(null)
+
+  // Generate fractal data with race condition protection
   const generateFractal = async (params = fractalParams) => {
+    // Cancel any existing request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort()
+    }
+
+    // Clear existing debounce timeout
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current)
+    }
+
+    // Debounce rapid calls (wait 300ms)
+    return new Promise((resolve) => {
+      debounceTimeoutRef.current = setTimeout(async () => {
+        await performGeneration(params)
+        resolve()
+      }, 300)
+    })
+  }
+
+  const performGeneration = async (params) => {
+    // Create new abort controller for this request
+    abortControllerRef.current = new AbortController()
+
     setLoading(true)
     setError(null)
 
@@ -99,7 +126,8 @@ function App() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(params)
+        body: JSON.stringify(params),
+        signal: abortControllerRef.current.signal
       })
 
       if (!response.ok) {
@@ -130,6 +158,12 @@ function App() {
       }
 
     } catch (err) {
+      // Don't show error for aborted requests (user changed parameters)
+      if (err.name === 'AbortError') {
+        console.log('🚫 Request cancelled (user changed parameters)')
+        return
+      }
+
       console.error('❌ Error generating fractal:', err)
       setError(err.message)
     } finally {
@@ -183,6 +217,16 @@ function App() {
   // Generate initial fractal
   useEffect(() => {
     generateFractal()
+
+    // Cleanup on unmount
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort()
+      }
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current)
+      }
+    }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
