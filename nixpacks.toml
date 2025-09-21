@@ -1,6 +1,6 @@
 [phases.setup]
 nixPkgs = ["nodejs", "gnumake", "gcc", "pkg-config"]
-aptPkgs = ["libglfw3-dev", "libglew-dev", "libcglm-dev", "mesa-common-dev", "libx11-dev", "libxrandr-dev", "libxi-dev", "libssl-dev", "opencl-headers", "ocl-icd-opencl-dev"]
+aptPkgs = ["libglfw3-dev", "libglew-dev", "libcglm-dev", "mesa-common-dev", "libx11-dev", "libxrandr-dev", "libxi-dev", "libssl-dev"]
 
 [phases.install]
 cmds = [

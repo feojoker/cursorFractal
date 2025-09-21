@@ -3,7 +3,7 @@ FROM node:18-bullseye
 
 WORKDIR /app
 
-# Install C++ build dependencies + OpenCL
+# Install C++ build dependencies (no OpenCL needed)
 RUN apt-get update && apt-get install -y \
     build-essential \
     libglfw3-dev \
@@ -15,8 +15,6 @@ RUN apt-get update && apt-get install -y \
     libxi-dev \
     libssl-dev \
     pkg-config \
-    opencl-headers \
-    ocl-icd-opencl-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy all source files

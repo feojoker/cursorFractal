@@ -35,7 +35,11 @@ static float3 interpolate(float3 p0, float3 p1, float v0, float v1) {
   if ((v1 - v0) == 0.0f)
     return p0;
   mu = (1.0f - v0) / (v1 - v0);
+#ifdef __APPLE__
   p = p0 + mu * (p1 - p0);
+#else
+  p = VEC3_INTERPOLATE(p0, mu, p1);
+#endif
   return p;
 }
 
