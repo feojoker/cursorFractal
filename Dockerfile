@@ -20,9 +20,9 @@ RUN apt-get update && apt-get install -y \
 # Copy all source files
 COPY . .
 
-# Compile C++ program
-RUN make clean || true
-RUN make CC=gcc CXX=g++ FLAGS='-O3 -Wall -I./includes -I./libft -I./imgui -I./imgui/backends' GL_LIBS='-lGL -lGLEW -lglfw -lm' OPENSSL_LIB='-lssl -lcrypto'
+# Compile C++ program using Linux build script
+RUN chmod +x build-linux.sh
+RUN ./build-linux.sh
 
 # Install Node.js dependencies
 WORKDIR /app/react-fractal-viewer

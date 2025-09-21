@@ -9,8 +9,8 @@ cmds = [
 
 [phases.build]
 cmds = [
-  "make clean || true",
-  "make CC=gcc CXX=g++ FLAGS='-O3 -Wall -I./includes -I./libft -I./imgui -I./imgui/backends' GL_LIBS='-lGL -lGLEW -lglfw -lm' OPENSSL_LIB='-lssl -lcrypto'",
+  "chmod +x build-linux.sh",
+  "./build-linux.sh",
   "cd react-fractal-viewer && npm run build"
 ]
 
