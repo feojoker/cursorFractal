@@ -13,7 +13,7 @@ CC=${CC:-gcc}
 CXX=${CXX:-g++}
 # Add OpenCL vector extension support and define OpenCL target version
 FLAGS="-O3 -Wall -I./includes -I./libft -I./imgui -I./imgui/backends -DCL_TARGET_OPENCL_VERSION=120 -DOPENCL_C_VERSION=120"
-GL_LIBS="-lGL -lGLEW -lglfw -lm"
+GL_LIBS="-lGL -lGLEW -lglfw -lm -ldl"
 OPENSSL_LIB="-lssl -lcrypto"
 
 # C source files
