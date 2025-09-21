@@ -6,7 +6,7 @@ Instead of fighting with C++ compilation issues, let's deploy with what already 
 
 ### ✅ What We Have:
 - ✅ Working React frontend
-- ✅ Working Node.js backend  
+- ✅ Working Node.js backend
 - ✅ Pre-generated fractal data (`fractal_data.json`)
 - ✅ JavaScript fallback for real-time generation
 
