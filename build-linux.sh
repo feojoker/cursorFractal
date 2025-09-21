@@ -86,6 +86,7 @@ done
 
 # Link everything
 echo "🔗 Linking morphosis..."
-$CXX obj/*.o imgui/*.o imgui/backends/*.o ./libft/libft.a -o morphosis $GL_LIBS $OPENSSL_LIB
+# On Linux, we don't use libft.a (use compatibility functions instead)
+$CXX obj/*.o imgui/*.o imgui/backends/*.o -o morphosis $GL_LIBS $OPENSSL_LIB
 
 echo "✅ Build complete! Binary: ./morphosis"

@@ -1,5 +1,9 @@
 #include <morphosis.h>
+#ifdef __APPLE__
 #include <libft.h>
+#else
+#include "libft_compat.h"
+#endif
 #include <fcntl.h>    // for open() and O_RDONLY
 #include <unistd.h>   // for read() and close()
 

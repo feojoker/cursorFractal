@@ -1,5 +1,9 @@
 #include <morphosis.h>
+#ifdef __APPLE__
 #include <libft.h>
+#else
+#include "libft_compat.h"
+#endif
 
 #define SIZE 1296
 
