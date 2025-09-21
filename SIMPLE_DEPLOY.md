@@ -7,10 +7,12 @@ Your app is now configured to serve both the React frontend and API from one Rai
 ### **How It Works:**
 
 1. **Build Phase**:
+   - C++ fractal generator (`morphosis`) is compiled with Linux libraries
    - `npm run build` creates the React production build in `dist/`
    - Static assets are optimized and bundled
 
 2. **Runtime**:
+   - C++ binary generates fractals in real-time (no JavaScript fallback)
    - Express server serves the API at `/api/*`
    - Express serves React static files for all other routes
    - Single URL serves both frontend and backend
