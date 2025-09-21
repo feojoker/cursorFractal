@@ -12,4 +12,4 @@ cmds = [
 ]
 
 [start]
-cmd = "cd react-fractal-viewer && npm run server"
+cmd = "cd react-fractal-viewer && npm run start:prod"

@@ -1,43 +1,77 @@
 # 🚀 Simple Deployment Guide
 
-## The Simple Approach
+## ✅ **Single Service Deployment (Frontend + Backend)**
 
-Instead of fighting with C++ compilation issues, let's deploy with what already works:
+Your app is now configured to serve both the React frontend and API from one Railway service.
 
-### ✅ What We Have:
-- ✅ Working React frontend
-- ✅ Working Node.js backend
-- ✅ Pre-generated fractal data (`fractal_data.json`)
-- ✅ JavaScript fallback for real-time generation
+### **How It Works:**
 
-### 🎯 Deployment Options:
+1. **Build Phase**:
+   - `npm run build` creates the React production build in `dist/`
+   - Static assets are optimized and bundled
 
-#### Option 1: Railway (Recommended)
-1. Use the simple nixpacks config: `mv nixpacks-simple.toml nixpacks.toml`
-2. Push to GitHub
-3. Deploy on Railway - it will auto-detect Node.js
+2. **Runtime**:
+   - Express server serves the API at `/api/*`
+   - Express serves React static files for all other routes
+   - Single URL serves both frontend and backend
 
-#### Option 2: Vercel
-1. Deploy the React app to Vercel
-2. Deploy the Node.js backend separately (Railway/Render)
+### **🎯 What Users Get:**
 
-#### Option 3: Render
-1. Deploy as Node.js web service
-2. Build command: `cd react-fractal-viewer && npm install && npm run build`
-3. Start command: `cd react-fractal-viewer && npm run server`
+- **Frontend**: `https://your-app.railway.app` (React app)
+- **API**: `https://your-app.railway.app/api/fractal` (API endpoints)
+- **Same domain** - no CORS issues!
+- **Beautiful 3D fractal visualizations** with Three.js
+- **Interactive controls** for fractal parameters
+- **Real-time generation** via API calls
+- **Fast loading** with optimized builds
 
-## 🎨 What Users Will Get:
-- Beautiful 3D fractal visualizations
-- Interactive controls
-- Real-time parameter adjustments
-- Professional React UI
-- Smooth performance with pre-generated data
+### **📋 Current Configuration:**
 
-## ⚡ Why This Works:
-- No C++ compilation issues
-- Fast deployment (< 5 minutes)
-- Reliable and stable
-- Same visual experience for users
-- JavaScript fallback is actually quite good!
+```json
+// package.json
+"scripts": {
+  "start:prod": "node server.js"  // Production start
+}
+```
 
-The C++ optimization can be added later once deployed.
+```javascript
+// server.js
+app.use(express.static('dist'));           // Serve React files
+app.post('/api/fractal', ...);             // API endpoints
+app.use((req, res, next) => {              // Catch-all for React routing
+  if (!req.path.startsWith('/api')) {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  }
+});
+```
+
+### **🚀 Deploy Instructions:**
+
+1. **Push your changes:**
+   ```bash
+   git add .
+   git commit -m "Configure single service deployment"
+   git push
+   ```
+
+2. **Railway will automatically:**
+   - Install Node.js dependencies
+   - Build the React app (`npm run build`)
+   - Start the server (`npm run start:prod`)
+   - Serve both frontend and API
+
+3. **Access your app:**
+   - Visit the Railway-provided URL
+   - Both frontend and API will be available
+
+### **⚡ Why This Works Better:**
+
+- ✅ **No C++ compilation issues**
+- ✅ **Fast deployment** (< 5 minutes)
+- ✅ **Single service** - easier to manage
+- ✅ **No CORS issues** - same domain
+- ✅ **Pre-generated fractal data** for instant loading
+- ✅ **JavaScript fallback** for dynamic generation
+- ✅ **Production optimized** builds
+
+The C++ optimization can be added later once the core deployment is stable.

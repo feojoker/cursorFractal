@@ -18,6 +18,9 @@ let isGenerating = false;
 app.use(cors());
 app.use(express.json());
 
+// Serve static files from the React app build directory
+app.use(express.static(join(__dirname, 'dist')));
+
 // Load the C++ generated fractal data
 let cppFractalData = null;
 
@@ -76,22 +79,11 @@ app.post('/api/fractal', async (req, res) => {
         } else {
             // Check if already generating
             if (isGenerating) {
-                console.log('⏳ C++ generation already in progress, using fallback...');
-                const fallbackData = generateSimpleFractal(iterations, c, Math.min(gridSize, 30));
-                res.json({
-                    success: true,
-                    vertices: fallbackData.vertices,
-                    indices: fallbackData.indices,
-                    triangleCount: fallbackData.triangleCount,
-                    vertexCount: fallbackData.vertexCount,
-                    metadata: {
-                        iterations,
-                        c,
-                        gridSize: Math.min(gridSize, 30),
-                        source: 'JavaScript Fallback (Rate Limited)',
-                        generatedAt: new Date().toISOString(),
-                        note: 'C++ generation in progress, using fallback'
-                    }
+                console.log('⏳ C++ generation already in progress, please wait...');
+                res.status(429).json({
+                    error: 'Fractal generation in progress, please wait and try again',
+                    retryAfter: 2000, // 2 seconds
+                    source: 'Rate Limited'
                 });
                 return;
             }
@@ -119,29 +111,11 @@ app.post('/api/fractal', async (req, res) => {
                 isGenerating = false;
             } catch (error) {
                 console.error('❌ C++ generation failed:', error.message);
-                console.log('🔄 Falling back to simplified JavaScript generation...');
-
-                try {
-                    const fallbackData = generateSimpleFractal(iterations, c, Math.min(gridSize, 30));
-                    res.json({
-                        success: true,
-                        vertices: fallbackData.vertices,
-                        indices: fallbackData.indices,
-                        triangleCount: fallbackData.triangleCount,
-                        vertexCount: fallbackData.vertexCount,
-                        metadata: {
-                            iterations,
-                            c,
-                            gridSize: Math.min(gridSize, 30),
-                            source: 'JavaScript Fallback (Simplified)',
-                            generatedAt: new Date().toISOString(),
-                            note: 'C++ generation failed, using simplified fallback'
-                        }
-                    });
-                } catch (fallbackError) {
-                    console.error('❌ Fallback generation also failed:', fallbackError.message);
-                    res.status(500).json({ error: 'Failed to generate fractal data' });
-                }
+                res.status(500).json({
+                    error: 'C++ fractal generation failed',
+                    details: error.message,
+                    note: 'Only C++ generation is supported. Please ensure the C++ binary is compiled and working.'
+                });
                 isGenerating = false;
             }
         }
@@ -213,56 +187,18 @@ async function generateFractalWithCpp(iterations, c, gridSize) {
     });
 }
 
-// Simple fallback fractal generation for when C++ fails
-function generateSimpleFractal(iterations, c, gridSize) {
-    const vertices = [];
-    const indices = [];
 
-    console.log(`📊 Generating simple fractal: iterations=${iterations}, gridSize=${gridSize}`);
-
-    // Create a simple sphere-like fractal
-    const radius = 1.0;
-    const segments = Math.min(gridSize, 20);
-
-    for (let i = 0; i < segments; i++) {
-        for (let j = 0; j < segments; j++) {
-            const u = (i / segments) * Math.PI * 2;
-            const v = (j / segments) * Math.PI;
-
-            const x = radius * Math.sin(v) * Math.cos(u);
-            const y = radius * Math.sin(v) * Math.sin(u);
-            const z = radius * Math.cos(v);
-
-            // Add some fractal-like variation
-            const variation = Math.sin(x * iterations) * Math.cos(y * iterations) * 0.1;
-
-            vertices.push(x + variation, y + variation, z + variation);
-        }
+// Catch-all handler: send back React's index.html file for client-side routing
+app.use((req, res, next) => {
+    // Skip API routes
+    if (req.path.startsWith('/api')) {
+        return next();
     }
-
-    // Create triangles
-    for (let i = 0; i < segments - 1; i++) {
-        for (let j = 0; j < segments - 1; j++) {
-            const a = i * segments + j;
-            const b = i * segments + (j + 1);
-            const c = (i + 1) * segments + j;
-            const d = (i + 1) * segments + (j + 1);
-
-            // Two triangles per quad
-            indices.push(a, b, c);
-            indices.push(b, d, c);
-        }
-    }
-
-    return {
-        vertices,
-        indices,
-        triangleCount: indices.length / 3,
-        vertexCount: vertices.length / 3
-    };
-}
+    res.sendFile(join(__dirname, 'dist', 'index.html'));
+});
 
 app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
     console.log(`📊 C++ fractal data: ${cppFractalData ? '✅ Loaded' : '❌ Not available'}`);
+    console.log(`🌐 Frontend served at: http://localhost:${PORT}`);
 });

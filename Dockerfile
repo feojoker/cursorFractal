@@ -19,4 +19,4 @@ RUN npm run build
 EXPOSE 3005
 
 WORKDIR /app/react-fractal-viewer
-CMD ["npm", "run", "server"]
+CMD ["npm", "run", "start:prod"]
