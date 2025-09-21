@@ -8,16 +8,13 @@ COPY react-fractal-viewer/package*.json ./react-fractal-viewer/
 WORKDIR /app/react-fractal-viewer
 RUN npm install
 
-# Copy all source files
+# Copy all source files (including fractal_data.json if it exists)
 WORKDIR /app
 COPY . .
 
 # Build React frontend
 WORKDIR /app/react-fractal-viewer
 RUN npm run build
-
-# Copy any existing fractal data
-COPY fractal_data.json ./fractal_data.json 2>/dev/null || echo "No fractal data found, will use JavaScript fallback"
 
 EXPOSE 3005
 

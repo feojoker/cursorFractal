@@ -1,9 +1,9 @@
 [phases.setup]
-nixPkgs = ["nodejs"]
+nixPkgs = ["nodejs", "npm"]
 
 [phases.install]
 cmds = [
-  "cd react-fractal-viewer && npm install"
+  "cd react-fractal-viewer && npm ci"
 ]
 
 [phases.build]
